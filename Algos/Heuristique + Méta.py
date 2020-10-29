@@ -543,7 +543,7 @@ def parcours_voisinages(C, adj_capt, adj_com, k, taille_tabou, nb_itérations):
         e = 0
         vals = {} #on a modifié le voisinage don on doit mettre à jour le dictionnaire des valeurs
         while(e < len(vois)):
-            vals[k] = len(vois[k])
+            vals[e] = len(vois[e])
             e += 1
         if(len(vois) == 0): #si le voisinage est vide on arrête les itérations
             break
