@@ -510,6 +510,7 @@ def parcours_voisinages(C, adj_capt, adj_com, k, taille_tabou, nb_itérations):
     minimum = len(C) #va contenir le minimum par rapport à tous les voisinages
     meilleur_index = 0
     minimums = []
+    meilleur_it = 0
     while(i < nb_itérations): #on explore au maximum len(C) voisinages
         minimums.append(minimum)
         if(vérifier_réalisabilité(adj_capt, adj_com, chemin_courant, k) == False):
