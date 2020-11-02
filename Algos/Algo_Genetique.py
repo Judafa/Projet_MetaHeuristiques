@@ -6,7 +6,7 @@ from Algos import Gen_Algo_Modified
 
 class Genetique:
 
-    def __init__(self, pbl_repr, algorithm_param):
+    def __init__(self, pbl_repr, algorithm_param, coeff):
         self.prl_repr = pbl_repr
         self.algorithm_param = algorithm_param
         self.model = None
@@ -16,19 +16,27 @@ class Genetique:
         self.distances_Com = self.prl_repr.distances_Com
         self.distances_puis = self.prl_repr.distances_puis
 
+        self.coeff = coeff
+
     # fonction a optimiser, pour l'instant moindres carrées
     def f(self, X):
         return np.sum(
-            [np.sum((np.dot(X, self.distances_Capt[i])) - self.k) ** 2 for i in range(self.n)])
+            [self.f2(np.dot(X, self.distances_Capt[i])) for i in range(self.n)])
 
-    def run(self):
+    def f2(self, p):
+        if p < self.k:
+            return self.coeff * (self.k - p + 1)
+        else:
+            return p - self.k
+
+    def run(self, verbose=0):
 
         self.model = Gen_Algo_Modified.geneticalgorithm(function=self.f,
                                                         dimension=self.n,
                                                         variable_type='bool',
                                                         algorithm_parameters=self.algorithm_param)
-        self.model.run()
+        self.model.run(verbose=verbose)
 
     def erreur_compte(self, X):
         return np.sum(
-            [np.sum(np.dot(X, self.distances_Capt[i])) < self.k for i in range(self.n)])
+            [np.dot(X, self.distances_Capt[i]) < self.k for i in range(self.n)])

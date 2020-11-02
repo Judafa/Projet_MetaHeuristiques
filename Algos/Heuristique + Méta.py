@@ -87,10 +87,6 @@ def qualite(cible, adj_capt, D):
 def adjacence(cibles, Rcapt, Rcom):
     adjacence_capt = {}
     adjacence_com = {}
-    for cible in cibles:
-        if(cible != ("0.00", "0.00")):
-            adjacence_capt[cible] = []
-            adjacence_com[cible] = []
     for cible1 in cibles:
         for cible2 in cibles:
             if(distance(cible1, cible2) <= Rcapt and cible1 != cible2 and cible2 != ("0.00","0.00")): #On n'inclut pas la cible elle-même dans sa liste des voisins
@@ -113,7 +109,7 @@ def parcours(adjacence_capt, adjacence_com, k):
     W = []  #Liste qui va contenir les cibles qui ne sont pas encore explorées lors du parcours par profondeur
     D = set() #ensemble des cibles k-couvertes
     n = len(adjacence_com) - 1 #nombre total des cibles sans compter le puits
-    p = ("0.00", "0.00")
+    p = list(adjacence_com.keys())[0] #Selon le format des données le puits est toujours la première clé
     qualites_voisins_p = {} #dictionnaire indiquant pour chaque voisin du puits dans le graphe de communication sa qualité
     for elem in adjacence_com[p]:
         qualites_voisins_p[elem] = qualite(elem, adjacence_capt, D)
@@ -178,7 +174,7 @@ def parcours(adjacence_capt, adjacence_com, k):
                 if(cibles_visitées[v] == 0): #Si la recherche termine et on trouve un candidat non visité on change la cible courante
                     cible_courante = v
             if(cibles_visitées[v] == 1 and len(W) == 0): #Si la recherche termine car W est devenue vide sans trouver un candidat non visité alors le parcours termine
-                return C, len(C), len(D)
+                return C, len(C), cibles_nombre_capteurs, len(D)
             else:
                 cible_courante = v
             
@@ -242,11 +238,11 @@ def parcours(adjacence_capt, adjacence_com, k):
                     
                 
             D.add(cible_courante) #cible courante est k-couverte donc on l'ajoute dans D
-            
+
         cibles_visitées[cible_courante] = 1 #On indique qu'on a visité la cible courante
         
         if(len(W) == 0): #si W est vide alors le parcours termine
-            return C, len(C), len(D)
+            return C, len(C), cibles_nombre_capteurs, len(D)
         else: #sinon on met à jour la cible courante pour qu'elle soit le dernier élément de W et on revient à la boucle while principale
             cible_courante = W.pop()
     return C, len(C), len(D)
@@ -704,37 +700,32 @@ print(minimum)'''
             f.close()'''
                     
 mins = {}
+path = "instances/captANOR150_7_4.dat"
+if str(path) != "instances/captANOR625_12_100.dat":
+   data = read_data(path)
+   for taille_tabou in [3]:
+       for k in [1]:
+            for (Rcapt, Rcom) in [(1, 1)]:
+               f = open("resultsMeta_100_iterations.txt", "a")
+               adj_capt, adj_com = adjacence(data, Rcapt, Rcom)
+               print(path, " taille tabou    :    ", taille_tabou, ", k    :    ", k, ", Rcapt    :    ", Rcapt, "Rcom    :    ", Rcom)
 
-for path in pathlib.Path("instances").iterdir():
-       if path.is_file() and str(path) != "instances/.DS_Store" and str(path) != "instances/captANOR1500_18_100.dat" and str(path) != "instances/captANOR900_15_20.dat" and str(path) != "instances/captANOR150_7_4.dat" and str(path) != "instances/captANOR225_8_10.dat" and str(path) != "instances/captANOR625_12_100.dat":
-           data = read_data(path)
-           for taille_tabou in [3, 7]:
-               for k in [1,2,3]:
-                    for (Rcapt, Rcom) in [(1, 1), (1, 2), (2, 2), (2, 3)]:
-                       f = open("resultsMeta_100_iterations_part3_true.txt", "a")
-                       adj_capt, adj_com = adjacence(data, Rcapt, Rcom)
-                       print(path, " taille tabou    :    ", taille_tabou, ", k    :    ", k, ", Rcapt    :    ", Rcapt, "Rcom    :    ", Rcom)
-                       
-                       C, lc, ld = parcours(adj_capt, adj_com, k)
-                       f.write("Réalisabilité de la solution initiale : " + str(vérifier_réalisabilité(adj_capt, adj_com, C, k)))
-                       f.write("\n")
-                       preds, succs = construire_chemin(adj_com, C)
-                       nouv_C = post_traitement(adj_capt, adj_com, k, preds, succs, C)
-                       f.write("Réalisabilité de la solution après traitement : " + str(vérifier_réalisabilité(adj_capt, adj_com, nouv_C, k)))
-                       print(vérifier_réalisabilité(adj_capt, adj_com, nouv_C, k))
-                       f.write("\n")
-                       time1 = time.time()
-                       meilleur_chemin, minimum, i, lc, minimums = parcours_voisinages(nouv_C, adj_capt, adj_com, k, taille_tabou, 100)
-                       time2 = time.time()
-                       f.write("File : " + str(path) + ", K = " + str(k) + ", Rcapt = " + str(Rcapt) + ", Rcom = " + str(Rcom) + ", Resultat après parcours: " + str(minimum)
-                               + ", Résultat initial : " + str(len(nouv_C)) + ", Time : " + str(time2 - time1) +  ", Taille tabou : "+ str(taille_tabou) + "\n")
-                       f.write("\n")
-                       f.close()
-                       mins[(str(path), taille_tabou, k, Rcapt, Rcom)] = minimums
+               C, lc, ld = parcours(adj_capt, adj_com, k)
+               f.write("Réalisabilité de la solution initiale : " + str(vérifier_réalisabilité(adj_capt, adj_com, C, k)))
+               f.write("\n")
+               preds, succs = construire_chemin(adj_com, C)
+               nouv_C = post_traitement(adj_capt, adj_com, k, preds, succs, C)
+               f.write("Réalisabilité de la solution après traitement : " + str(vérifier_réalisabilité(adj_capt, adj_com, nouv_C, k)))
+               print(vérifier_réalisabilité(adj_capt, adj_com, nouv_C, k))
+               f.write("\n")
+               time1 = time.time()
+               meilleur_chemin, minimum, i, lc, minimums = parcours_voisinages(nouv_C, adj_capt, adj_com, k, taille_tabou, 100)
+               time2 = time.time()
+               f.write("File : " + str(path) + ", K = " + str(k) + ", Rcapt = " + str(Rcapt) + ", Rcom = " + str(Rcom) + ", Resultat après parcours: " + str(minimum)
+                       + ", Résultat initial : " + str(len(nouv_C)) + ", Time : " + str(time2 - time1) +  "\n")
+               f.write("\n")
+               f.close()
+               mins[(str(path), taille_tabou, k, Rcapt, Rcom)] = minimums
 f.close()
 
-f2 = open("Mins_part3_true.txt", "w")
-f2.write(mins)
-f2.close()
-    
     
