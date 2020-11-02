@@ -245,8 +245,7 @@ class Algo_Tabou:
         - Le premier affecte à chaque capteur le capteur prédécesseur
         - Le deuxième affecte à chaque capteur la liste de successeurs'''
     def construire_chemin(self, C):
-        capt_a_0 = C[
-            0]  # On veut que la première cible du chemin soit le puits donc on cherche le deuxième capteur de façon à ce qu'il soit un voisin de communication du puits
+        capt_a_0 = C[0]  # On veut que la première cible du chemin soit le puits donc on cherche le deuxième capteur de façon à ce qu'il soit un voisin de communication du puits
         i = 0
         while i < len(C):
             if ("0.00", "0.00") in self.adjacence_com[C[i]]:
@@ -393,19 +392,19 @@ class Algo_Tabou:
             pred, succ = self.construire_chemin(chemin_courant)  # on trouve le chemin de la solution courante
             vois, vals, capteurs_supprimés = self.voisinage(chemin_courant, pred, succ)  # on trouve le voisinage de la solution courante
             j = 0
-            vois2 = vois.copy()
-            capteurs_supprimés2 = capteurs_supprimés.copy()
+            #vois2 = vois.copy()
+            #capteurs_supprimés2 = capteurs_supprimés.copy()
             while j < len(vois):  # pour chaque liste du voisinage
                 for capt in liste_tabou:  # pour chaque capteur dans la liste tabou
                     # print(len(capteurs_supprimés))
                     # print(len(vois))
                     if capt in vois[j]:  # si le capteur est dans la listes
-                        vois2.remove(vois[j])  # on supprime cet élément de la liste du voisinage
-                        capteurs_supprimés2.remove(capteurs_supprimés[j])
+                        vois.remove(vois[j])  # on supprime cet élément de la liste du voisinage
+                        capteurs_supprimés.remove(capteurs_supprimés[j])
                         break
                 j += 1
-            vois = vois2.copy()
-            capteurs_supprimés = capteurs_supprimés2.copy()
+            #vois = vois2.copy()
+            #capteurs_supprimés = capteurs_supprimés2.copy()
             e = 0
             vals = {}  # on a modifié le voisinage don on doit mettre à jour le dictionnaire des valeurs
             while e < len(vois):

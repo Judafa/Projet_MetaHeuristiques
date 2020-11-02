@@ -1,6 +1,7 @@
 from Algos import Algo_Tabou
+import pandas as pd
 
-filepath = "instances/captANOR150_7_4.dat"
+filepath = "Algos/instances/captANOR225_8_10.dat"
 Rcapt = 1
 Rcom = 1
 k = 1
