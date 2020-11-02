@@ -698,9 +698,9 @@ print(minimum)'''
             f.write("Avant : " + str(lc4) + ", Après : " + str(res4) + ", K = " + str(k) + ", Rcapt = " + str(2) + ", Rcom = " + str(3) + ", File : " + str(path) + ", Time : " + str(time44 - time33) + "\n")
             f.write("\n")
             f.close()'''
-                    
+t1 = time.time()
 mins = {}
-path = "instances/captANOR150_7_4.dat"
+path = "instances/captANOR225_8_10.dat"
 if str(path) != "instances/captANOR625_12_100.dat":
    data = read_data(path)
    for taille_tabou in [3]:
@@ -726,6 +726,8 @@ if str(path) != "instances/captANOR625_12_100.dat":
                f.write("\n")
                f.close()
                mins[(str(path), taille_tabou, k, Rcapt, Rcom)] = minimums
+t2 = time.time()
+print(t2 - t1)
 f.close()
 
     

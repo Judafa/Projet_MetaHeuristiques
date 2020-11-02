@@ -45,20 +45,19 @@ class Algo_Tabou:
         mins = {}
 
         lc, ld = self.parcours()
-        print("Réalisabilité de la solution initiale : " + str(self.vérifier_réalisabilité()))
+        print("Réalisabilité de la solution initiale : " + str(self.vérifier_réalisabilité(self.C)))
         print("\n")
-        preds, succs = self.construire_chemin()
-        nouv_C = self.post_traitement(preds, succs)
-        print("Réalisabilité de la solution après traitement : " + str(self.vérifier_réalisabilité()))
-        print(self.vérifier_réalisabilité())
+        preds, succs = self.construire_chemin(self.C)
+        self.post_traitement(preds, succs, self.C)
+        print("Réalisabilité de la solution après traitement : " + str(self.vérifier_réalisabilité(self.C)))
+        print(self.vérifier_réalisabilité(self.C))
         print("\n")
         time1 = time.time()
         meilleur_chemin, minimum, i, lc, minimums = self.parcours_voisinages(taille_tabou, nb_iterations)
         time2 = time.time()
-        print(
-            "File : " + str(self.path) + ", K = " + str(self.k) + ", Rcapt = " + str(self.Rcapt) + ", Rcom = " + str(
+        print("File : " + str(self.path) + ", K = " + str(self.k) + ", Rcapt = " + str(self.Rcapt) + ", Rcom = " + str(
                 self.Rcom) + ", Resultat après parcours: " + str(minimum)
-            + ", Résultat initial : " + str(sum(self.C)) + ", Time : " + str(time2 - time1) + "\n")
+            + ", Résultat initial : " + str(sum(self.C)))
 
         mins[(str(self.path), taille_tabou, self.k, self.Rcapt, self.Rcom)] = minimums
 
@@ -212,30 +211,31 @@ class Algo_Tabou:
     Cette fonction parcourt les cibles et élimine les capteurs inutiles c.à.d les capteurs dont la supression n'affecte pas la réalisabilité de la solution.
     Elle retourne la nouvelle liste de capteurs et le nouveau dictionnaire indiquanr pour chaque cible le degré de couverture.'''
 
-    def post_traitement(self, preds, succs):
+    def post_traitement(self, preds, succs, nouv_C):
         #nouveau_C = self.C.copy()
 
-        for capteur in range(1, len(self.C)):  # Pour chaque capteur dans C
-            inutile = True
-            if self.degre_couv(capteur) > self.k:  # si le capteur est couvert par un nombre de capteurs > k
-                for cible in self.adjacence_capt[capteur]:  # pour chaque cible captée par ce capteur
-                    if self.degre_couv(cible) == self.k:  # si on a une cible qui est captée exactement par k capteurs alors ce capteur est utile
-                        inutile = False
-                        break
-            else:  # si le capteur est capté exactement par k capteurs alors il est utile
-                inutile = False
+        for capteur in range(1, len(nouv_C)):  # Pour chaque capteur dans C
+            if nouv_C[capteur] == 1:
+                inutile = True
+                if self.degre_couv(capteur) > self.k:  # si le capteur est couvert par un nombre de capteurs > k
+                    for cible in self.adjacence_capt[capteur]:  # pour chaque cible captée par ce capteur
+                        if self.degre_couv(cible) == self.k:  # si on a une cible qui est captée exactement par k capteurs alors ce capteur est utile
+                            inutile = False
+                            break
+                else:  # si le capteur est capté exactement par k capteurs alors il est utile
+                    inutile = False
 
-            if inutile:  # si le capteur et ces voisins de captations sont tous captés par > k capteurs
-                pred = preds[capteur]  # pred est le prédécesseur du capteur dans le chemin
-                succ = succs[capteur]  # succ est la liste des successeurs du capteur dans le chemin
-                for elem in succ:  # pour chaque successeur du capteur
-                    if (elem not in self.adjacence_com[
-                        pred]):  # si le successeur ne peut pas communiquer avec pred alors le capteur est utile pour la communication (on peut faire mieux et vérifier la communication du successeur avec tous les preds de pred)
-                        inutile = False
-                        break
+                if inutile:  # si le capteur et ces voisins de captations sont tous captés par > k capteurs
+                    pred = preds[capteur]  # pred est le prédécesseur du capteur dans le chemin
+                    succ = succs[capteur]  # succ est la liste des successeurs du capteur dans le chemin
+                    for elem in succ:  # pour chaque successeur du capteur
+                        if (elem not in self.adjacence_com[
+                            pred]):  # si le successeur ne peut pas communiquer avec pred alors le capteur est utile pour la communication (on peut faire mieux et vérifier la communication du successeur avec tous les preds de pred)
+                            inutile = False
+                            break
 
-            if inutile:  # si le capteur est inutile
-                self.C[capteur] = 0
+                if inutile:  # si le capteur est inutile
+                    nouv_C[capteur] = 0
         return
 
 
@@ -243,49 +243,63 @@ class Algo_Tabou:
     '''Cette fonction prend en entrée le disctionnaire représentant la liste d'adjacence de communication et la liste des capteurs pour retourner deux dictionnaires :
         - Le premier affecte à chaque capteur le capteur prédécesseur
         - Le deuxième affecte à chaque capteur la liste de successeurs'''
-    def construire_chemin(self):
-        capt_a_0 = self.C[0]  # On veut que la première cible du chemin soit le puits donc on cherche le deuxième capteur de façon à ce qu'il soit un voisin de communication du puits
-        i = 0
-        while i < len(self.C):
-            if self.C[i] == 1 and 0 in self.adjacence_com[i]:
-                capt_a_0 = i
+    def construire_chemin(self, nouv_C):
+        capt_a_0 = []  # On veut que la première cible du chemin soit le puits donc on cherche le deuxième capteur de façon à ce qu'il soit un voisin de communication du puits
+        i = 1
+        while i < len(nouv_C):
+            if nouv_C[i] == 1 and 0 in self.adjacence_com[i]:
+                capt_a_0.append(int(i))
                 break
             i += 1
 
         succ = {}  # dictionnaire qui va contenir les successeurs
-        for elem in range(1, len(self.C)):  # initialisation de succ
+        for elem in range(1, len(nouv_C)):  # initialisation de succ
             succ[elem] = []
 
-        succ[0] = [capt_a_0]  # On a déjà trouvé l'un des successeurs du puits
-        pred = {capt_a_0: 0}  # et alors le prédécesseur de ce successeur est le puits
+        succ[0] = capt_a_0  # On a déjà trouvé l'un des successeurs du puits
         ajouté = {}  # dictionnaire indiquant pour chaque capteur de C si ce capteur a été ajouté dans le chemin (autrement : il a un prédécesseur ajouté)
-        for elem in range(1, len(self.C)):  # initialisation de ajouté
-            if self.C[i] == 1:
+        pred = {}
+        for e in capt_a_0:
+            pred[e] = 0  # et alors le prédécesseur de ce successeur est le puits
+            ajouté[e] = True
+        for elem in range(1, len(nouv_C)):  # initialisation de ajouté
+            if nouv_C[elem] == 1:
                 ajouté[elem] = False
-        ajouté[capt_a_0] = True  # on a ajouté l'un des successeurs du puits
-        nombre_restant = sum(self.C) - 1  # le nombre restant des capteurs à ajouter dans le chemin
+        nombre_restant = sum(nouv_C)  # le nombre restant des capteurs à ajouter dans le chemin
         i = 1
-        while (nombre_restant > 0):  # tant qu'il y a des capteurs non ajoutés dans le chemin
-            # print(nombre_restant)
-            if not ajouté[i]:  # si le capteur i n'est pas ajouté
-                if i in self.adjacence_com[0]:  # s'il peut communiquer directement avec le puits
-                    ajouté[i] = True  # on l'ajoute
-                    pred[i] = 0  # on indique que son prédécesseur est le puits
-                    succ[0].append(i)  # on l'ajoute à la liste de successeurs du puits
-                    nombre_restant -= 1  # et on décrémente le nombre de capteurs restants
+        while nombre_restant > 0:  # tant qu'il y a des capteurs non ajoutés dans le chemin
+            #print(nombre_restant)
+            if nombre_restant == 45:
+                a = 1
+            if nouv_C[int(i)] == 1:
+                if not ajouté[i]:  # si le capteur i n'est pas ajouté
+                    if i in self.adjacence_com[0]:  # s'il peut communiquer directement avec le puits
+                        ajouté[i] = True  # on l'ajoute
+                        pred[i] = 0  # on indique que son prédécesseur est le puits
+                        succ[0].append(i)  # on l'ajoute à la liste de successeurs du puits
+                        nombre_restant -= 1  # et on décrémente le nombre de capteurs restants
 
-                else:  # sinon
-                    for voisin in self.adjacence_com[i]:  # pour chaque voisin de communication de ce ce capteur
+                    else:  # sinon
+                        for voisin in self.adjacence_com[i]:  # pour chaque voisin de communication de ce ce capteur
 
-                        if self.C[voisin] == 1:  # si le voisin est dans C
+                            if nouv_C[voisin] == 1:  # si le voisin est dans C
 
-                            if ajouté[voisin]:  # et si le voisin a été ajouté dans le chemin
-                                ajouté[i] = True  # on ajoute le capteur dans le chemin
-                                pred[i] = voisin  # on précise que le prédécesseur du capteur est ce voisin
-                                succ[voisin].append(i)  # et on ajoute le capteur à la liste des successeurs du voisin
-                                nombre_restant -= 1  # finalement on décrémente le nombre restant
-                                break  # on sort de la boucle quand on ajoute le capteur
-            i = (i + 1) % sum(self.C)  # tant qu'il y a des capteurs non ajoutés on va parcourir C pour pouvoir les ajouter
+                                if ajouté[voisin]:  # et si le voisin a été ajouté dans le chemin
+                                    ajouté[i] = True  # on ajoute le capteur dans le chemin
+                                    pred[i] = voisin  # on précise que le prédécesseur du capteur est ce voisin
+                                    succ[voisin].append(i)  # et on ajoute le capteur à la liste des successeurs du voisin
+                                    nombre_restant -= 1  # finalement on décrémente le nombre restant
+                                    break  # on sort de la boucle quand on ajoute le capteur
+            j = i + 1
+            while True:
+                if nouv_C[j] == 1:
+                    i = int(j)
+                    break
+                else:
+                    j = (j + 1) % (len(nouv_C)-1)
+                    if j == 0:
+                        j = 1
+
         return pred, succ
 
 
@@ -300,14 +314,14 @@ class Algo_Tabou:
         nouv_C = self.C.copy()
         à_couvrir = []  # va contenir les capteurs qu'on doit couvrir une fois on supprime le capteur en entrée
         for voisin_capt in self.adjacence_capt[capteur]:  # pour chaque voisin de captation de capteur
-            if self.degre_couv(voisin_capt, nouv_C) == self.k:  # si le voisin est capté par par exactement k capteurs alors quand on va supprimer capteur on doit le couvrir par le nouveau capteur ajouté
+            if self.degre_couv(voisin_capt) == self.k:  # si le voisin est capté par par exactement k capteurs alors quand on va supprimer capteur on doit le couvrir par le nouveau capteur ajouté
                 à_couvrir.append(voisin_capt)  # on l'ajoute alors à la liste à couvrir
-        if self.degre_couv(capteur, nouv_C) == self.k:  # si le capteur lui-même est capté exactement par k capteur
+        if self.degre_couv(capteur) == self.k:  # si le capteur lui-même est capté exactement par k capteur
             à_couvrir.append(capteur)  # on l'ajoute à la liste à couvrir
 
         for voisin_capt in self.adjacence_capt[capteur]:  # on choisit le nouveau capteur parmi les voisins du capteur à supprimer
             valide = True  # indique la validité du voisin pour être le nouveau capteur
-            if self.C[voisin_capt] == 0:  # si le voisin n'est pas dans C
+            if nouv_C[voisin_capt] == 0:  # si le voisin n'est pas dans C
 
                 if pred[capteur] in self.adjacence_com[voisin_capt] or voisin_capt in self.adjacence_com[0]:  # si le voisin peut communiquer avec le prédécesseur du capteur à supprimer ou directement avec le puits (on peut faire mieux)
                     for elem in succ[capteur]:  # pour chaque successeur du capteur
@@ -346,15 +360,16 @@ class Algo_Tabou:
         # minimum = len(C) #variable qui va contenir la valeur minimale dans le voisinage
         # final_C = []
         capteurs_supprimés = []
+
         for capteur in range(1, len(self.C)):  # pour chaque capteur dans C
             if self.C[capteur] == 1:
                 existe, nouv_C = self.supprimer_ajouter(capteur, pred, succ)  # on effectue la transformation supprimer_ajouter
                 if existe:  # si la transformation donne une liste rélisable
                     nouv_pred, nouv_succ = self.construire_chemin(nouv_C)  # on construit le chemin de la transformation
-                    final_C = self.post_traitement(nouv_pred, nouv_succ, nouv_C)  # puis on élimine les capteurs inutiles
-                    voisinage.append(final_C)  # on ajoute le résultat final dans le voisinage
+                    self.post_traitement(nouv_pred, nouv_succ, nouv_C)  # puis on élimine les capteurs inutiles
+                    voisinage.append(nouv_C)  # on ajoute le résultat final dans le voisinage
                     index = len(voisinage) - 1  # c'est l'indice de la liste ajoutée dans voisinage
-                    valeurs_voisinage[index] = len(final_C)  # on ajoute la valeur de cette liste dans valeurs_voisinage
+                    valeurs_voisinage[index] = sum(self.C)  # on ajoute la valeur de cette liste dans valeurs_voisinage
                     capteurs_supprimés.append(capteur)
 
         return voisinage, valeurs_voisinage, capteurs_supprimés
@@ -368,15 +383,15 @@ class Algo_Tabou:
     def parcours_voisinages(self, taille_tabou, nb_itérations):
         liste_tabou = []
         i = 0
-        meilleur_chemin = self.C.copy()
+        chemin_courant = self.C.copy()
         #chemin_courant = self.C.copy()
-        minimum = len(self.C)  # va contenir le minimum par rapport à tous les voisinages
+        minimum = sum(self.C)  # va contenir le minimum par rapport à tous les voisinages
         meilleur_index = 0
         minimums = []
         meilleur_it = 0
         while i < nb_itérations:  # on explore au maximum len(C) voisinages
             minimums.append(minimum)
-            if not self.vérifier_réalisabilité():
+            if not self.vérifier_réalisabilité(chemin_courant):
                 print(self.C)
                 print("**************************")
                 print("Erreur : solution non réalisable")
@@ -387,7 +402,10 @@ class Algo_Tabou:
             # print(i)
             # print(minimum)
             # print(vérifier_cnc(adj_capt, chemin_courant, cnc_courant, list(cnc_courant.keys())))
-            pred, succ = self.construire_chemin()  # on trouve le chemin de la solution courante
+            pred, succ = self.construire_chemin(self.C)  # on trouve le chemin de la solution courante
+            # for i in range(0, len(self.C)):
+            #     if self.C[i] == 1:
+            #         a = pred[i]
             vois, vals, capteurs_supprimés = self.voisinage(pred, succ)  # on trouve le voisinage de la solution courante
             j = 0
             #vois2 = vois.copy()
@@ -397,7 +415,7 @@ class Algo_Tabou:
                     # print(len(capteurs_supprimés))
                     # print(len(vois))
                     if capt in vois[j]:  # si le capteur est dans la listes
-                        vois.remove(vois[j])  # on supprime cet élément de la liste du voisinage
+                        del vois[j]  # on supprime cet élément de la liste du voisinage
                         capteurs_supprimés.remove(capteurs_supprimés[j])
                         break
                 j += 1
@@ -418,7 +436,7 @@ class Algo_Tabou:
                     min_index = index
             if min_local < minimum:  # si le min_local < minimum on met minimum à jour
                 minimum = min_local
-                meilleur_chemin = vois[min_index].copy()
+                self.C = vois[min_index].copy()
                 meilleur_it = i
             if len(liste_tabou) < taille_tabou:  # traitement FIFO pour la liste tabou
                 liste_tabou.append(capteurs_supprimés[min_index])
@@ -428,14 +446,14 @@ class Algo_Tabou:
             chemin_courant = vois[min_index].copy()
             # print("Min local : ", min_local)
             i += 1
-        return meilleur_chemin, minimum, meilleur_it, len(self.C), minimums
+        return self.C, minimum, meilleur_it, sum(self.C), minimums
 
-    def degre_couv(self, cible, C):
+    def degre_couv(self, cible):
         s = 0
         for elem in self.adjacence_capt[cible]:
-            if C[elem] == 1:
+            if self.C[elem] == 1:
                 s += 1
-        if C[cible] == 1:
+        if self.C[cible] == 1:
             s += 1
         return s
 
@@ -443,32 +461,36 @@ class Algo_Tabou:
     '''C'est une fonction qui prend en entrée un dictionnaire représentant la liste d'adjacence de captation, un autre représentant la liste d'adjacence de communication, une liste de capteurs et le degré de couverture k.
     Elle retourne True si C est réalisable et False sinon.'''
 
-    def vérifier_réalisabilité(self):
+    def vérifier_réalisabilité(self, nouv_C):
         liste_cibles = list(self.adjacence_capt.keys())
         if 0 in liste_cibles:
             liste_cibles.remove(0)
         for elem in liste_cibles:
             s = 0
             for elem2 in self.adjacence_capt[elem]:
-                if self.C[elem2] == 1:
+                if nouv_C[elem2] == 1:
                     s = s + 1
-            if self.C[elem] == 1:
+            if nouv_C[elem] == 1:
                 s = s + 1
             if s < self.k:
                 print("here : ", elem)
                 print(s)
                 return False
         a = []
-        for elem in range(1, len(self.C)):
+        for elem in range(1, len(nouv_C)):
             for elem2 in self.adjacence_com[elem]:
-                if self.C[elem2] == 1:
+                if nouv_C[elem2] == 1:
                     a.append(elem)
                     break
             if elem in self.adjacence_com[0]:
                 a.append(elem)
-        # if set(a) != set(self.C):
-        #     print("non comm")
-        #     return False
+        s = []
+        for i in range(1, len(nouv_C)):
+            if nouv_C[i] == 1:
+                s.append(i)
+        if set(a) != set(s):
+            print("non comm")
+            return False
         return True
 
     def vérifier_cnc(self, cnc, liste_cibles):
@@ -476,9 +498,9 @@ class Algo_Tabou:
         for cible in liste_cibles:
             s = 0
             for voisin in self.adjacence_capt[cible]:
-                if voisin in self.C:
+                if self.C[voisin] == 1:
                     s += 1
-            if cible in self.C:
+            if self.C[cible] == 1:
                 s += 1
             if cnc[cible] != s:
                 print(cible)
