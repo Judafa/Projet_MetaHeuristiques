@@ -1,0 +1,8 @@
+Réalisabilité de la solution initiale : True
+Réalisabilité de la solution après traitement : True
+File : Algos/instances/captANOR225_8_10.dat, K = 1, Rcapt = 1, Rcom = 1, Resultat après parcours: 45, Résultat initial : 50, Time : 41.43691039085388, Taille tabou : 3
+
+Réalisabilité de la solution initiale : True
+Réalisabilité de la solution après traitement : True
+File : Algos/instances/captANOR150_7_4.dat, K = 1, Rcapt = 1, Rcom = 1, Resultat après parcours: 31, Résultat initial : 35, Time : 5.253536701202393, Taille tabou : 3
+

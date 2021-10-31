@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="83492aa1-1adf-48db-a4b4-54d0e0b3f035" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../Algos/Algo_Tabou.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Algos/Algo_Tabou.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Test_Tabou.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="20HOG974Md6oblwrnza1oGcMfA5" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="83492aa1-1adf-48db-a4b4-54d0e0b3f035" name="Default Changelist" comment="" />
+      <created>1635697947645</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1635697947645</updated>
+    </task>
+    <servers />
+  </component>
+</project>

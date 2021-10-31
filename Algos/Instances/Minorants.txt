@@ -1,0 +1,116 @@
+captANOR150_7_4.dat
+Nb de sommets :226
+K=1
+Rcapt/Rcom=1/1-> bornePL=20.42
+Rcapt/Rcom=1/2-> bornePL=18.5
+Rcapt/Rcom=2/2-> bornePL=5.74 
+Rcapt/Rcom=2/3-> bornePL= 5.5
+K=2
+Rcapt/Rcom=1/1-> bornePL= 39.28
+Rcapt/Rcom=1/2-> bornePL= 39
+Rcapt/Rcom=2/2-> bornePL= 11
+Rcapt/Rcom=2/3-> bornePL= 11
+K=3
+Rcapt/Rcom=1/1-> bornePL= 60
+Rcapt/Rcom=1/2-> bornePL= 60
+Rcapt/Rcom=2/2-> bornePL= 17
+Rcapt/Rcom=2/3-> bornePL= 17
+
+*******************************************************************************
+captANOR225_8_10.dat
+Nb de sommets :226
+K=1
+Rcapt/Rcom=1/1-> bornePL=25.21 
+Rcapt/Rcom=1/2-> bornePL= 24.5
+Rcapt/Rcom=2/2-> bornePL= 7.6
+Rcapt/Rcom=2/3-> bornePL= 7.5
+K=2
+Rcapt/Rcom=1/1-> bornePL= 49.84
+Rcapt/Rcom=1/2-> bornePL= 49.83
+Rcapt/Rcom=2/2-> bornePL= 15
+Rcapt/Rcom=2/3-> bornePL= 15
+K=3
+Rcapt/Rcom=1/1-> bornePL= 77.33
+Rcapt/Rcom=1/2-> bornePL= 77.33
+Rcapt/Rcom=2/2-> bornePL= 22.5
+Rcapt/Rcom=2/3-> bornePL= 22.5
+ 
+
+******************************************************************************
+captANOR625_12_100.dat
+Nb de sommets :626
+K=1
+Rcapt/Rcom=1/1-> bornePL=53.44 
+Rcapt/Rcom=1/2-> bornePL=52.67
+Rcapt/Rcom=2/2-> bornePL=15.37
+Rcapt/Rcom=2/3-> bornePL=15.23
+K=2
+Rcapt/Rcom=1/1-> bornePL= 105.88
+Rcapt/Rcom=1/2-> bornePL= 105.88
+Rcapt/Rcom=2/2-> bornePL= 30.47
+Rcapt/Rcom=2/3-> bornePL= 30.47
+K=3
+Rcapt/Rcom=1/1-> bornePL= 161.53
+Rcapt/Rcom=1/2-> bornePL= 161.49
+Rcapt/Rcom=2/2-> bornePL= 45.73
+Rcapt/Rcom=2/3-> bornePL= 45.73
+
+ *******************************************************************************
+captANOR900_15_20.dat
+Nb de sommets :901
+K=1
+Rcapt/Rcom=1/1-> bornePL=81.5 
+Rcapt/Rcom=1/2-> bornePL=79.9 
+Rcapt/Rcom=2/2-> bornePL=22.1
+Rcapt/Rcom=2/3-> bornePL=21.8 
+K=2
+Rcapt/Rcom=1/1-> bornePL=161.80
+Rcapt/Rcom=1/2-> bornePL=160.81
+Rcapt/Rcom=2/2-> bornePL=43.72
+Rcapt/Rcom=2/3-> bornePL=43.69
+K=3
+Rcapt/Rcom=1/1-> bornePL= 245.02
+Rcapt/Rcom=1/2-> bornePL= 244.28
+Rcapt/Rcom=2/2-> bornePL= 65.66
+Rcapt/Rcom=2/3-> bornePL= 65.65 
+
+
+*******************************************************************************
+captANOR1500_15_100.dat
+Nb de sommets :1501
+K=1
+Rcapt/Rcom=1/1-> bornePL=79.54
+Rcapt/Rcom=1/2-> bornePL=79.05
+Rcapt/Rcom=2/2-> bornePL=22.37
+Rcapt/Rcom=2/3-> bornePL=22.16
+K=2
+Rcapt/Rcom=1/1-> bornePL=158.38
+Rcapt/Rcom=1/2-> bornePL=158.24
+Rcapt/Rcom=2/2-> bornePL=44.35
+Rcapt/Rcom=2/3-> bornePL=44.33
+K=3
+Rcapt/Rcom=1/1-> bornePL= 238.60
+Rcapt/Rcom=1/2-> bornePL= 238.59
+Rcapt/Rcom=2/2-> bornePL=66.52
+Rcapt/Rcom=2/3-> bornePL=66.52
+
+
+*******************************************************************************
+captANOR1500_18_100.dat
+Nb de sommets :1501
+K=1
+Rcapt/Rcom=1/1-> bornePL=112.87
+Rcapt/Rcom=1/2-> bornePL=111.75
+Rcapt/Rcom=2/2-> bornePL=31.27
+Rcapt/Rcom=2/3-> bornePL=30.90
+K=2
+Rcapt/Rcom=1/1-> bornePL= 224.09
+Rcapt/Rcom=1/2-> bornePL= 224.03
+Rcapt/Rcom=2/2-> bornePL= 61.87
+Rcapt/Rcom=2/3-> bornePL=61.81
+K=3
+Rcapt/Rcom=1/1-> bornePL=340.52 
+Rcapt/Rcom=1/2-> bornePL=340.52
+Rcapt/Rcom=2/2-> bornePL=92.77
+Rcapt/Rcom=2/3-> bornePL=92.74
+

@@ -268,9 +268,8 @@ class Algo_Tabou:
         nombre_restant = sum(nouv_C)  # le nombre restant des capteurs à ajouter dans le chemin
         i = 1
         while nombre_restant > 0:  # tant qu'il y a des capteurs non ajoutés dans le chemin
-            #print(nombre_restant)
-            if nombre_restant == 45:
-                a = 1
+            print(nombre_restant)
+
             if nouv_C[int(i)] == 1:
                 if not ajouté[i]:  # si le capteur i n'est pas ajouté
                     if i in self.adjacence_com[0]:  # s'il peut communiquer directement avec le puits
@@ -346,6 +345,8 @@ class Algo_Tabou:
                 nouv_C[capteur] = 0  # on supprime le capteur
                 nouv_C[voisin_capt] = 1 # on ajoute le voisin
                 break
+        if not self.vérifier_réalisabilité(nouv_C):
+            print("eedfzdqffffffffffffffffffffffffffffffffffffffffffffffffffff")
         return valide, nouv_C
 
     ###Descritption de la fonction voisinage :
@@ -478,12 +479,13 @@ class Algo_Tabou:
                 return False
         a = []
         for elem in range(1, len(nouv_C)):
-            for elem2 in self.adjacence_com[elem]:
-                if nouv_C[elem2] == 1:
+            if nouv_C[elem] == 1:
+                for elem2 in self.adjacence_com[elem]:
+                    if nouv_C[elem2] == 1:
+                        a.append(elem)
+                        break
+                if elem in self.adjacence_com[0]:
                     a.append(elem)
-                    break
-            if elem in self.adjacence_com[0]:
-                a.append(elem)
         s = []
         for i in range(1, len(nouv_C)):
             if nouv_C[i] == 1:
